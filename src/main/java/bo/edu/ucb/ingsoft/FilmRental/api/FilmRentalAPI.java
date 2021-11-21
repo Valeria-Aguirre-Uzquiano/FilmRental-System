@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import bo.edu.ucb.ingsoft.FilmRental.bl.FilmSearchBl;
@@ -26,5 +27,10 @@ public class FilmRentalAPI {
     @GetMapping(value = "/film/{countryId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Film> FilmsByCountry(@PathVariable Integer countryId){
         return filmSearchBl.FilmsByCountry(countryId);
+    }
+
+    @GetMapping(value = "/film/findByParameters", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Film> findByParameters(@RequestParam (name = "title", required = false) String title, @RequestParam (name = "actor", required = false) String actor){
+        return filmSearchBl.FilmsByParam(title, actor);
     }
 }
