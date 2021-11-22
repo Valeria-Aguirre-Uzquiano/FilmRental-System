@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import bo.edu.ucb.ingsoft.FilmRental.bl.FilmSearchBl;
+import bo.edu.ucb.ingsoft.FilmRental.dao.CustomerDao;
 import bo.edu.ucb.ingsoft.FilmRental.dao.FilmDao;
 
 @SpringBootApplication
@@ -16,6 +17,11 @@ public class FilmRentalApplication {
 	@Bean
 	public FilmDao filmDao(DataSource dataSource){
 		return new FilmDao(dataSource);
+	}
+
+	@Bean
+	public CustomerDao customerDao(DataSource dataSource){
+		return new CustomerDao(dataSource);
 	}
 
 	@Bean

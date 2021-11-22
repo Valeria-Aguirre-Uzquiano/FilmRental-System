@@ -4,3 +4,37 @@ Accept: application/json
 ###
 GET http://localhost:8080/film/findByParameters?title=mod&actor=zero_cage
 Accept: application/json
+
+###
+POST http://localhost:8080/film/rental/addFilm/9
+
+###
+GET http://localhost:8080/film/rental
+Accept: application/json
+
+###
+DELETE http://localhost:8080/film/rental/deleteFilm/9
+
+###
+POST http://localhost:8080/customer/addCustomer
+Accept: application/json
+Content-Type: application/json
+
+
+{
+  "store_id": 1,
+  "first_name": "string",
+  "last_name": "string",
+  "email": "string",
+    "address": "string",
+    "address2": "string",
+    "district": "string",
+    "postal_code": "string",
+    "phone": "string",
+    "location": "string",
+    "last_update": "2021-11-21T22:25:53.378Z",
+ 
+  "active": 1,
+  "create_date": "2021-11-21T22:25:53.378Z",
+  "last_update": "2021-11-21T22:25:53.378Z"
+}

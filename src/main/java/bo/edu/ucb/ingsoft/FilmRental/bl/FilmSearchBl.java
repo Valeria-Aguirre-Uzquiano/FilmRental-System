@@ -1,5 +1,6 @@
 package bo.edu.ucb.ingsoft.FilmRental.bl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -13,6 +14,7 @@ public class FilmSearchBl {
 
     private FilmDao filmDao;
     Store store = new Store();
+    List<Film> rentalList = new ArrayList<>();
     
 
     public FilmSearchBl(FilmDao filmDao){
@@ -78,6 +80,23 @@ public class FilmSearchBl {
         }
         
         return res;
+    }
+
+    public void CartAddFilm(Integer filmId) {
+        System.out.println("tienda =" + store.getStoreId());        
+        rentalList.add(filmDao.InsertFilm(store.getStoreId(),filmId));
+    }
+
+    public List<Film> FilmInCart() {
+        return rentalList;
+    }
+
+    public void CartDeleteFilm(Integer filmId) {
+        for(Film it: rentalList){
+            if(it.getFilmId() ==  filmId){
+                rentalList.remove(it);
+            }
+        }
     }
     
 }
