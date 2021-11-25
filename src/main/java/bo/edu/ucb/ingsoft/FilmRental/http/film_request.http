@@ -6,35 +6,59 @@ GET http://localhost:8080/film/findByParameters?title=mod&actor=zero_cage
 Accept: application/json
 
 ###
-POST http://localhost:8080/film/rental/addFilm/9
+POST http://localhost:8080/film/rental/addFilm/11
 
 ###
 GET http://localhost:8080/film/rental
 Accept: application/json
 
 ###
-DELETE http://localhost:8080/film/rental/deleteFilm/9
+DELETE http://localhost:8080/film/rental/deleteFilm/7
+
+###
+POST http://localhost:8080/customer/addAddress
+Content-Type: application/json
+
+{  
+  "address": "add",
+  "address2": "add2",
+  "district": "dis",
+  "city": "Aden",
+  "postal_code": 1234,
+  "phone": 777643534556
+}
 
 ###
 POST http://localhost:8080/customer/addCustomer
-Accept: application/json
 Content-Type: application/json
-
 
 {
   "store_id": 1,
-  "first_name": "string",
-  "last_name": "string",
-  "email": "string",
-    "address": "string",
-    "address2": "string",
-    "district": "string",
-    "postal_code": "string",
-    "phone": "string",
-    "location": "string",
-    "last_update": "2021-11-21T22:25:53.378Z",
- 
+  "first_name": "user",
+  "last_name": "test",
+  "email": "test@gmail.com",
+  "address_id": 609,
   "active": 1,
-  "create_date": "2021-11-21T22:25:53.378Z",
-  "last_update": "2021-11-21T22:25:53.378Z"
+  "create_date": "2021-11-24T22:25:53.378Z"
 }
+
+###
+GET http://localhost:8080/costumer/payment/address/12
+Accept: application/json
+
+###
+PUT http://localhost:8080/costumer/payment/address
+Content-Type: application/json
+
+{
+  "address_id": 16,
+  "address": "808 Bhopal Manor",
+  "address2": "",
+  "district": "Haryana",
+  "city": "Yamuna Nagar",
+  "postal_code": 10673,
+  "phone": 465887807014
+}
+
+###
+GET http://localhost:8080/costumer/payment/email/12

@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import bo.edu.ucb.ingsoft.FilmRental.bl.CustomerBl;
 import bo.edu.ucb.ingsoft.FilmRental.bl.FilmSearchBl;
 import bo.edu.ucb.ingsoft.FilmRental.dao.CustomerDao;
 import bo.edu.ucb.ingsoft.FilmRental.dao.FilmDao;
@@ -27,6 +28,11 @@ public class FilmRentalApplication {
 	@Bean
 	public FilmSearchBl filmSearchBl(FilmDao filmDao){
 		return new FilmSearchBl(filmDao);
+	}
+
+	@Bean
+	public CustomerBl customerBl(CustomerDao customerDao){
+		return new CustomerBl(customerDao);
 	}
 
 
