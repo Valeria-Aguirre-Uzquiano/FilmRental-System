@@ -1,42 +1,25 @@
 package bo.edu.ucb.ingsoft.FilmRental.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import bo.edu.ucb.ingsoft.FilmRental.dto.Address;
 import bo.edu.ucb.ingsoft.FilmRental.dto.Customer;
+import bo.edu.ucb.ingsoft.FilmRental.dto.Film;
+import bo.edu.ucb.ingsoft.FilmRental.dto.RentalCart;
 
 public class CustomerDao {
     private DataSource dataSource;
 
     public CustomerDao(DataSource dataSource) {
         this.dataSource = dataSource;
-    }
-
-    public void InsertCustomer(){
-        String query = "INSERT INTO sakila.customer " +
-                        "   (store_id, first_name, last_name, email, address_id, active, create_date, last_update)" +
-                        "  VALUES (?'2',? 'a',? 'b',? 'ab@gamil.com', ?'599', ?'1', ?'2020-11-21 22:04:37', ?'2020-11-21 22:04:37')";
-         try(
-            Connection conn = dataSource.getConnection();
-            PreparedStatement pstmt = conn.prepareStatement(query);
-            //pstmt.setInt(1, storeId);
-
-                //preparedStatement.setString(1, "mkyong");
-                //preparedStatement.setBigDecimal(2, new BigDecimal(799.88));
-                //preparedStatement.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
-    
-                //int row = preparedStatement.executeUpdate();
-    
-                // rows affected
-                //System.out.println(row); //1
-        ){}catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     public Address GetAddressSend(Integer customerId) {
@@ -194,6 +177,143 @@ public class CustomerDao {
         return res;
     }
 
+    public Integer insertPayment(Integer customerId, RentalCart rentalCart, int days) {
+        Integer pay = 0;
+        Integer staff_id = 0;
+        List<Integer> idIn_List = new ArrayList<Integer>();
+        List<Integer> idRe_List = new ArrayList<Integer>();
+        List<Double> amount_List = new ArrayList<Double>();
+        List<Film> Films = rentalCart.getRentalFilm();
+        
+        for(Film f: Films){
+            Integer inven = InsertInventory(rentalCart.getStore_id(), f.getFilmId());
+            System.out.println("id inventory: "+inven);
+            if(inven != -1){
+                idIn_List.add(inven);
+            }
+        }
+        amount_List = calculateAmount(Films, rentalCart.getDiscount(), days);
+
+        if(rentalCart.getStore_id() == 1 ){ staff_id = 1;}else{ staff_id = 2;}
+
+        for(int i=0; i < idIn_List.size(); i++ ){
+            Integer ren = InsertRental( rentalCart.getRental_date(), idIn_List.get(i), customerId, rentalCart.getReturn_date(), staff_id);
+            if(ren != -1){
+                idRe_List.add(ren);
+            }
+        }
+
+        for(int i=0; i < idRe_List.size(); i++ ){
+            pay = InsertPayment( customerId, staff_id, idRe_List.get(i), amount_List.get(i), rentalCart.getPayment_date() );
+        }
+
+        return pay;
+    }
+
+    private Integer InsertPayment(Integer customerId, Integer staff_id, Integer rental, Double amount, Date payment_date) {
+        Integer res= -1;
+        String query = "INSERT INTO payment " +
+                    "  (customer_id, staff_id, rental_id, amount, payment_date)" +
+                    "  VALUES ( ? , ? , ? , ? , ? )";
+         try(
+            Connection conn = dataSource.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+        ){
+            pstmt.setInt(1, customerId);
+            pstmt.setInt(2, staff_id);
+            pstmt.setInt(3, rental);
+            pstmt.setDouble(4, amount);
+            pstmt.setDate(5, payment_date);
+            res = pstmt.executeUpdate();
+            
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
+    private List<Double> calculateAmount(List<Film> films, Double discount, int days) {
+        List<Double> list = new ArrayList<Double>();
+        for(Film f: films){
+            double aux = ((days * f.getRental_rate()) - ((days * f.getRental_rate())*discount));
+            list.add(aux);
+        }
+        return list;
+    }
+
+    private Integer InsertRental(Date rental_date, Integer inven, Integer customerId, Date return_date, Integer staff_id) {
+        Integer res= -1;
+        String query = "INSERT INTO rental " +
+                    "  (rental_date, inventory_id, customer_id, return_date, staff_id)" +
+                    "  VALUES ( ? , ? , ? , ? , ? )";
+         try(
+            Connection conn = dataSource.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+        ){
+            pstmt.setDate(1, rental_date);
+            pstmt.setInt(2, inven);
+            pstmt.setInt(3, customerId);
+            pstmt.setDate(4, return_date);
+            pstmt.setInt(5, staff_id);
+            int row = pstmt.executeUpdate();
+            if(row == 1){
+                String query2 = " SELECT MAX(rental_id) as lastId FROM rental";
+                try(
+                    Connection conn2 = dataSource.getConnection();
+                    var pstmt2 =  conn.prepareStatement(query2);
+                    
+                ){ 
+                    ResultSet rs =  pstmt2.executeQuery();
+                    while(rs.next()){
+                        res = rs.getInt("lastId");
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+            }else{
+                res =  -1;
+            }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
+    private Integer InsertInventory(Integer idStore, Integer film_id) {
+        Integer res= -1;
+        String query = "INSERT INTO inventory " +
+                    "  (film_id, store_id)" +
+                    "  VALUES ( ?, ? )";
+         try(
+            Connection conn = dataSource.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(query);
+        ){
+            pstmt.setInt(1, film_id);
+            pstmt.setInt(2, idStore);
+            int row = pstmt.executeUpdate();
+            if(row == 1){
+                String query2 = " SELECT MAX(inventory_id) as lastId FROM inventory";
+                try(
+                    Connection conn2 = dataSource.getConnection();
+                    var pstmt2 =  conn.prepareStatement(query2);
+                    
+                ){ 
+                    ResultSet rs =  pstmt2.executeQuery();
+                    while(rs.next()){
+                        res = rs.getInt("lastId");
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+            }else{
+                res =  -1;
+            }
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return res;
+    }
+
     private Integer getCity_ID(String city) {
         Integer cId=0;
         String query = "SELECT c.city_id FROM city c WHERE c.city LIKE ( ? ); ";
@@ -212,6 +332,7 @@ public class CustomerDao {
         }
         return cId;
     }
+
 
     
 }            

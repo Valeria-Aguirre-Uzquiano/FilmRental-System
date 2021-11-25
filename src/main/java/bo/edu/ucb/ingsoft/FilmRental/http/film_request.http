@@ -6,7 +6,7 @@ GET http://localhost:8080/film/findByParameters?title=mod&actor=zero_cage
 Accept: application/json
 
 ###
-POST http://localhost:8080/film/rental/addFilm/11
+POST http://localhost:8080/film/rental/addFilm/21
 
 ###
 GET http://localhost:8080/film/rental
@@ -62,3 +62,37 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/costumer/payment/email/12
+
+
+###
+POST http://localhost:8080/costumer/payment/12
+Content-Type:  application/json
+
+{
+  "store_id": 1,
+  "rentalFilm":  [
+    {
+      "filmId": 11,
+      "title": "ALAMO VIDEOTAPE",
+      "description": "A Boring Epistle of a Butler And a Cat who must Fight a Pastry Chef in A MySQL Convention",
+      "releaseYear": 2006,
+      "rental_duration": 6,
+      "rental_rate": 0.99,
+      "lastUpdate": "2006-02-15T04:00:00.000+00:00"
+    },
+    {
+      "filmId": 21,
+      "title": "AMERICAN CIRCUS",
+      "description": "A Insightful Drama of a Girl And a Astronaut who must Face a Database Administrator in A Shark Tank",
+      "releaseYear": 2006,
+      "rental_duration": 3,
+      "rental_rate": 4.99,
+      "lastUpdate": "2006-02-15T04:00:00.000+00:00"
+    }
+  ],
+  "rental_date": "2021-11-25T22:25:53.378Z",
+  "payment_date": "2021-11-25T22:25:53.378Z",
+  "return_date": "2021-11-28T22:25:53.378Z",
+  "discount": 0.15,
+  "total": 15.249
+}

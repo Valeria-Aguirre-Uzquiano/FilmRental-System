@@ -19,11 +19,9 @@ import bo.edu.ucb.ingsoft.FilmRental.bl.FilmSearchBl;
 import bo.edu.ucb.ingsoft.FilmRental.dto.Address;
 import bo.edu.ucb.ingsoft.FilmRental.dto.Customer;
 import bo.edu.ucb.ingsoft.FilmRental.dto.Film;
+import bo.edu.ucb.ingsoft.FilmRental.dto.RentalCart;
 
-/*
-Bajo la perspectiva high cohesion. El API reste deberia validar lo que el cliente envio,
-entendiendo por cliente a las aplicaciones web y movil, son datos correctos....  
-*/
+
 @RestController
 public class FilmRentalAPI {
     FilmSearchBl filmSearchBl;
@@ -89,5 +87,10 @@ public class FilmRentalAPI {
         map.put("email", customerBl.getEmail(customerId));
         return map;
         
+    }
+
+    @PostMapping( value = "/costumer/payment/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String addCustomer(@PathVariable Integer customerId, @RequestBody RentalCart rentalCart)  {
+        return customerBl.addPayment(customerId, rentalCart);
     }
 }
