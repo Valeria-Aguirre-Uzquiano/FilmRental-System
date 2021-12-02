@@ -75,8 +75,10 @@ public class FilmRentalAPI {
     }
 
     @PostMapping( value = "/customer/addCustomer", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String addCustomer(@RequestBody Customer customer) {
-        return customerBl.newCustomer(customer);
+    public Map<String, Integer> addCustomer(@RequestBody Customer customer) {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("IdCos", customerBl.newCustomer(customer));
+        return map;
         
     }
 

@@ -44,12 +44,12 @@ public class CustomerBl {
         return customerDao.newAddress(address);
     }
 
-    public String newCustomer(Customer customer) {
+    public Integer newCustomer(Customer customer) {
         Integer res = customerDao.newCustommer(customer);
-        if(res == 1){
-            return "Registro exitoso";
+        if(res != null){
+            return res;
         }else{
-            return "Error en registro";
+            return 0;
         }
     }
 

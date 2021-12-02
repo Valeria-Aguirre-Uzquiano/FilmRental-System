@@ -153,6 +153,7 @@ public class CustomerDao {
     }
 
     public Integer newCustommer(Customer customer) {
+        Integer idCos= 0;
         Integer res = 0;
         String query = "INSERT INTO customer (store_id, first_name, last_name, email, address_id, active, create_date) " +
                     "   VALUES ( ? , ? , ? , ? , ? , ?, ? ) ";
@@ -169,12 +170,27 @@ public class CustomerDao {
             pstmt.setDate(7, customer.getCreate_date());
             res = pstmt.executeUpdate();
             System.out.println("repuesta: "+res);
+            if (res == 1) {
+                String query2 = " SELECT MAX(customer_id) as lastId FROM customer";
+                try(
+                    Connection conn2 = dataSource.getConnection();
+                    var pstmt2 =  conn.prepareStatement(query2);
+                    
+                ){ 
+                    ResultSet rs =  pstmt2.executeQuery();
+                    while(rs.next()){
+                        idCos = rs.getInt("lastId");
+                    }
+                }catch(SQLException ex){
+                    ex.printStackTrace();
+                }
+            }
 
         }catch(SQLException ex){
             ex.printStackTrace();
         }
 
-        return res;
+        return idCos;
     }
 
     public Integer insertPayment(Integer customerId, RentalCart rentalCart, int days) {
