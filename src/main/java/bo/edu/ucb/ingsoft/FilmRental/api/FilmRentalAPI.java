@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,21 @@ public class FilmRentalAPI {
         return filmSearchBl.FilmsByCountry(countryId);
     }
 
+    @GetMapping(value = "/film/debut/{countryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Film> SearchDebutFilms(@PathVariable Integer countryId){
+        return filmSearchBl.SearchDebutFilms(countryId);
+    }
+
+    @GetMapping(value = "/film/lastrental/{countryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Film> SearchLastRental(@PathVariable Integer countryId){
+        return filmSearchBl.SearchLastRental(countryId);
+    }
+
+    @GetMapping(value = "/film/maxrental/{countryId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Film> SearchMaxRental(@PathVariable Integer countryId){
+        return filmSearchBl.SearchMaxRental(countryId);
+    }
+
     @GetMapping(value = "/film/findByParameters", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Film> findByParameters(@RequestParam (name = "title", required = false) String title, @RequestParam (name = "actor", required = false) String actor){
         return filmSearchBl.FilmsByParam(title, actor);
@@ -52,6 +68,7 @@ public class FilmRentalAPI {
         return filmSearchBl.FilmInCart();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @DeleteMapping(value = "/film/rental/deleteFilm/{filmId}")
     public void deleteFilml(@PathVariable Integer filmId){
         filmSearchBl.CartDeleteFilm(filmId);
@@ -92,5 +109,17 @@ public class FilmRentalAPI {
     @PostMapping( value = "/costumer/payment/{customerId}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public String addCustomer(@PathVariable Integer customerId, @RequestBody RentalCart rentalCart)  {
         return customerBl.addPayment(customerId, rentalCart);
+    }
+
+    @GetMapping(value = "/costumer/{user}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Customer getCustomer(@PathVariable String user){
+        return customerBl.getCustomer(user);
+        
+    }
+
+    @GetMapping(value = "/costumer/city/{countryId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<String> getCities(@PathVariable Integer countryId){
+        return customerBl.getCities(countryId);
+        
     }
 }

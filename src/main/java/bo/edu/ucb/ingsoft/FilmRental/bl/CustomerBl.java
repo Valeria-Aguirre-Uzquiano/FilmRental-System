@@ -84,5 +84,14 @@ public class CustomerBl {
         }
         return sum;
     }
+
+    public Customer getCustomer(String user) {
+
+        return customerDao.GetCustomer(user);
+    }
+
+    public List<String> getCities(Integer countryId) {
+        return customerDao.getCities(countryId);
+    }
     
 }

@@ -1,10 +1,6 @@
 package bo.edu.ucb.ingsoft.FilmRental.dto;
 
 
-
-import javax.persistence.Embeddable;
-
-@Embeddable
 public class Address {
     private Integer address_id;
     private String address;

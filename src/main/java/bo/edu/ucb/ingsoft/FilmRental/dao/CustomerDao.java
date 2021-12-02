@@ -210,6 +210,63 @@ public class CustomerDao {
         return pay;
     }
 
+    public Customer GetCustomer(String user) {
+        Customer result = null;
+        
+        String query = "SELECT customer_id, "  +
+                    "   store_id, " +
+                    "   first_name, " +
+                    "   last_name, " +
+                    "   address_id " +
+                    "   FROM customer c " +
+                    "   WHERE c.email LIKE ( ? ) ";
+
+        try(
+            Connection conn = dataSource.getConnection();
+            PreparedStatement pstmt =  conn.prepareStatement(query);
+            ){      
+            pstmt.setString(1, user);       
+            ResultSet rs =  pstmt.executeQuery();
+            while(rs.next()){
+                Customer customer = new Customer();
+                customer.setCustomer_id(rs.getInt("customer_id"));
+                customer.setStore_id(rs.getInt("store_id"));
+                customer.setFirst_name(rs.getString("first_name"));
+                customer.setLast_name(rs.getString("last_name"));
+                customer.setAddress_id(rs.getInt("address_id"));
+                result = customer;
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return result;
+    }
+
+    public List<String> getCities(Integer countryId) {
+        List<String> result = new ArrayList<String>();
+        
+        String query = "SELECT city "  +
+                    "   FROM city c " +
+                    "   WHERE c.country_id LIKE ( ? ) ";
+
+        try(
+            Connection conn = dataSource.getConnection();
+            PreparedStatement pstmt =  conn.prepareStatement(query);
+            ){      
+            pstmt.setInt(1, countryId);;       
+            ResultSet rs =  pstmt.executeQuery();
+            while(rs.next()){
+                String city = rs.getString("city");
+                result.add(city);
+            }
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return result;
+    }
+
     private Integer InsertPayment(Integer customerId, Integer staff_id, Integer rental, Double amount, Date payment_date) {
         Integer res= -1;
         String query = "INSERT INTO payment " +
@@ -332,6 +389,8 @@ public class CustomerDao {
         }
         return cId;
     }
+
+   
 
 
     

@@ -21,10 +21,24 @@ public class FilmSearchBl {
         this.filmDao = filmDao;
     }
 
-    public List<Film> FilmsByCountry( Integer countryId){
-        
+    public List<Film> FilmsByCountry( Integer countryId){        
         store.setStoreId(countryId);
         return filmDao.FilmByCountry(countryId);
+    }
+
+    public List<Film> SearchDebutFilms(Integer countryId) {
+        store.setStoreId(countryId);
+        return filmDao.SearchDebutFilms(countryId);
+    }
+
+    public List<Film> SearchLastRental(Integer countryId) {
+        store.setStoreId(countryId);
+        return filmDao.SearchLastRental(countryId);
+    }
+
+    public List<Film> SearchMaxRental(Integer countryId) {
+        store.setStoreId(countryId);
+        return filmDao.SearchMaxRental(countryId);
     }
 
     public List<Film> FilmsByParam(String title, String actor) {
@@ -92,11 +106,14 @@ public class FilmSearchBl {
     }
 
     public void CartDeleteFilm(Integer filmId) {
+        
         for(Film it: rentalList){
-            if(it.getFilmId() ==  filmId){
+            System.out.println("entra a delete "+it.getFilmId());
+            if(it.getFilmId().equals(filmId)){
+                System.out.println("Filmid ="+filmId);
                 rentalList.remove(it);
             }
         }
-    }
+    }    
     
 }

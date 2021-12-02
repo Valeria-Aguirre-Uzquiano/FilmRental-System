@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class Customer {
 
+    private Integer customer_id;
     private Integer store_id;
     private String first_name;
     private String last_name;
@@ -13,6 +14,14 @@ public class Customer {
     private Date create_date;
 
     public Customer(){        
+    }
+
+    public Integer getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(Integer customer_id) {
+        this.customer_id = customer_id;
     }
 
     public Integer getAddress_id() {

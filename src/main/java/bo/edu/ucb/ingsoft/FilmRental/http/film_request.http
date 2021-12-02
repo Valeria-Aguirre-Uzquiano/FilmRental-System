@@ -2,6 +2,18 @@ GET http://localhost:8080/film/20
 Accept: application/json
 
 ###
+GET http://localhost:8080/film/debut/20
+Accept: application/json
+
+###
+GET http://localhost:8080/film/lastrental/20
+Accept: application/json
+
+###
+GET http://localhost:8080/film/maxrental/20
+Accept: application/json
+
+###
 GET http://localhost:8080/film/findByParameters?title=mod&actor=zero_cage
 Accept: application/json
 
@@ -13,7 +25,7 @@ GET http://localhost:8080/film/rental
 Accept: application/json
 
 ###
-DELETE http://localhost:8080/film/rental/deleteFilm/7
+DELETE http://localhost:8080/film/rental/deleteFilm/938
 
 ###
 POST http://localhost:8080/customer/addAddress
@@ -96,3 +108,11 @@ Content-Type:  application/json
   "discount": 0.15,
   "total": 15.249
 }
+
+###
+GET http://localhost:8080/costumer/MARY.SMITH@sakilacustomer.org
+Accept: application/json
+
+###
+GET http://localhost:8080/costumer/city/20
+Accept: application/json
